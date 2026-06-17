@@ -13,6 +13,12 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "tags" {
+  description = "Common tags applied to all resources"
+  type        = map(string)
+  default     = {}
+}
+
 variable "vnet_address_space" {
   description = "Address space for the VNet"
   type        = list(string)
@@ -25,8 +31,8 @@ variable "vmss_subnet_prefix" {
   default     = ["10.0.1.0/24"]
 }
 
-variable "tags" {
-  description = "Common tags applied to all resources"
-  type        = map(string)
-  default     = {}
+variable "bastion_subnet_prefix" {
+  description = "Address prefix for the AzureBastionSubnet (used by the NSG rule allowing SSH)"
+  type        = list(string)
+  default     = ["10.0.2.0/26"]
 }
