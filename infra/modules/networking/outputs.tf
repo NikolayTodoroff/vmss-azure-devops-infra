@@ -13,3 +13,15 @@ output "vmss_subnet_id" {
 output "nsg_id" {
   value = azurerm_network_security_group.vmss.id
 }
+
+output "bastion_subnet_id" {
+  value = azurerm_subnet.bastion.id
+}
+
+output "bastion_host_id" {
+  value = azurerm_bastion_host.this.id
+}
+
+output "nat_gateway_id" {
+  value = azurerm_nat_gateway.this.id
+}
