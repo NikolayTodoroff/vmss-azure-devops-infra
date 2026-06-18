@@ -58,3 +58,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "lb_backend_pool_id" {
+  description = "Load Balancer backend pool ID to associate the VMSS NICs with"
+  type        = string
+}
