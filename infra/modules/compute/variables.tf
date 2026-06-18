@@ -35,6 +35,18 @@ variable "instance_count" {
   default     = 2
 }
 
+variable "min_instance_count" {
+  description = "Minimum number of VMSS instances autoscale will maintain"
+  type        = number
+  default     = 2
+}
+
+variable "max_instance_count" {
+  description = "Maximum number of VMSS instances autoscale can scale out to"
+  type        = number
+  default     = 4
+}
+
 variable "instance_sku" {
   description = "VM size for each VMSS instance"
   type        = string

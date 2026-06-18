@@ -6,6 +6,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   instances           = var.instance_count
   admin_username      = var.admin_username
   upgrade_mode        = "Automatic"
+  tags = var.tags
 
   custom_data         = filebase64("${path.module}/cloud-init/nginx.yaml")
   disable_password_authentication = true
@@ -38,5 +39,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
     }
   }
 
-  tags = var.tags
+  lifecycle {
+    ignore_changes = [instances]
+  }
 }
