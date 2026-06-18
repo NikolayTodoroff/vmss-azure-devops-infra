@@ -5,13 +5,15 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   sku                 = var.instance_sku
   instances           = var.instance_count
   admin_username      = var.admin_username
+  upgrade_mode        = "Automatic"
+
+  custom_data         = filebase64("${path.module}/cloud-init/nginx.yaml")
+  disable_password_authentication = true
 
   admin_ssh_key {
     username   = var.admin_username
     public_key = var.admin_ssh_public_key
   }
-
-  disable_password_authentication = true
 
   source_image_reference {
   publisher = "Canonical"
