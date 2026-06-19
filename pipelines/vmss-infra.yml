@@ -1,0 +1,68 @@
+parameters:
+  - name: runApply
+    displayName: 'Apply changes (unchecked = plan only)'
+    type: boolean
+    default: false
+      
+  - name: environment
+    displayName: 'Environment'
+    type: string
+    default: 'dev'
+    values:
+      - dev
+      - prod 
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/**      
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - ${{ if eq(parameters.environment, 'dev') }}:
+    - group: vmssado-dev-vars
+  - ${{ if eq(parameters.environment, 'prod') }}:
+    - group: vmssado-prod-vars
+  - name: terraformVersion
+    value: '1.15.5'
+  - name: workingDirectory
+    value: '$(System.DefaultWorkingDirectory)/infra/main'
+  - name: backendResourceGroup
+    value: 'rg-tfstate-${{ parameters.environment }}'
+  - name: backendStorageAccount
+    value: 'stvmssadoinfra${{ parameters.environment }}'
+  - name: backendContainer
+    value: 'tfstate'
+  - name: backendKey
+    value: 'vmssinfra-${{ parameters.environment }}.tfstate'
+  - name: tfVarsFile
+    value: '$(System.DefaultWorkingDirectory)/infra/env/${{ parameters.environment }}.tfvars'
+
+stages:
+  - stage: Validate
+    displayName: 'Validate Terraform'
+    jobs:
+      - job: Validate
+        displayName: 'Terraform Validate'
+        steps:
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: $(terraformVersion)
+
+          - script: terraform fmt -check -recursive
+            displayName: 'terraform fmt -check'
+            workingDirectory: $(workingDirectory)
+
+          - script: terraform init -backend=false
+            displayName: 'terraform init (no backend)'
+            workingDirectory: $(workingDirectory)
+
+          - script: terraform validate
+            displayName: 'terraform validate'
+            workingDirectory: $(workingDirectory)
