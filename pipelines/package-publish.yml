@@ -26,6 +26,6 @@ steps:
 
   - script: |
       dotnet nuget push "$(Build.ArtifactStagingDirectory)/*.nupkg" \
-        --source "vmss-devops-infra/vmssadoinfra-feed" \
+        --source "https://pkgs.dev.azure.com/az400hub/vmss-devops-infra/_packaging/vmssadoinfra-feed/nuget/v3/index.json" \
         --api-key AzureDevOps
     displayName: 'Push to Azure Artifacts feed'
