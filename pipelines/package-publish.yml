@@ -24,10 +24,8 @@ steps:
         /p:PackageVersion=$(packageVersion)
     displayName: 'Pack SharedLib'
 
-  - task: NuGetCommand@2
+  - script: |
+      dotnet nuget push "$(Build.ArtifactStagingDirectory)/*.nupkg" \
+        --source "vmss-devops-infra/vmssadoinfra-feed" \
+        --api-key AzureDevOps
     displayName: 'Push to Azure Artifacts feed'
-    inputs:
-      command: 'push'
-      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-      publishVstsFeed: 'vmss-devops-infra/vmssadoinfra-feed'
-      allowPackageConflicts: false
