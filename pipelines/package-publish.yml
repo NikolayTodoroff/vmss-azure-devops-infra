@@ -1,0 +1,33 @@
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  packageVersion: '1.0.$(Build.BuildId)'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET 8 SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+
+  - task: NuGetAuthenticate@1
+    displayName: 'Authenticate to Azure Artifacts feed'
+
+  - script: |
+      dotnet pack packages/SharedLib/SharedLib.csproj \
+        --configuration $(buildConfiguration) \
+        --output $(Build.ArtifactStagingDirectory) \
+        /p:PackageVersion=$(packageVersion)
+    displayName: 'Pack SharedLib'
+
+  - task: NuGetCommand@2
+    displayName: 'Push to Azure Artifacts feed'
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      publishVstsFeed: 'vmss-devops-infra/vmssadoinfra-feed'
+      allowPackageConflicts: false
