@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackageId>VmssAdoInfra.SharedLib</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Nikolay</Authors>
+    <Description>Small shared utility library demonstrating the Azure Artifacts publish/consume workflow.</Description>
+  </PropertyGroup>
+
+</Project>
