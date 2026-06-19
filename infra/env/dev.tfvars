@@ -1,6 +1,6 @@
-app_name    = "vmssadoinfra"
-environment = "dev"
-location    = "westeurope"
+app_name        = "vmssadoinfra"
+environment     = "dev"
+location        = "westeurope"
 subscription_id = "bcaf1056-6646-4069-8a85-c154fe786b07"
 
 admin_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBsJa0EI9SNgb8YHHbskp+9xmnBKoLdGCu5rEbfOWfk6Jo9EI2yz3kAFwE73LBp/HjWepMRcYtKfkpbybFgo0OBvg8IYBSZbck4AQsn1AdyM6gTIUFfNn5S5aONaJW5Wsy3J/l327xezl0l9bNFw7aitPz9Rz66/CazcPvaFwqO8kLMJWYqXNrVreVskzF4aPGZer9Kyoao8WN8Bgvlvt5qXq9egFk/sU4yeuuYW2c5Ebc939DHtefbxX09a8zRqADrwUoXWvTG3B8HdLJIiIgzZNqdvtWMzFlVdH9xoVJOqfLCgBagD813AXBQ5v9mTxk63jYz6g9yFYRz1MuwCYzhAAvKdEkITdDd8m++7H+LJlPNQS98l5xRyutbe9hwGuGkDtW3wk/FGg5qID5MUX8/34O8ovctVOXNXDDP3frL2yg1Lujehqy7HrYOZ1e9L+TBl+JqrchcxK0gjjfLS+h3Tr7kzUcsXtYhdWFFMEMIP89bgIHPur9BbvlWzO2Nxxjkyy9UEh7pRHG/1MbE0cWrjA++VVA9m0EKpTrwNR3FnltOyfvpjttbBDDqgZh5Uoblxexn1YDttabGjKoFWUC1lw5ULcQRtN25M4klQbEvaLORgoUomLK61BN/pyQ1guyODSjxf8ZIM3yIC3VZV5TB258LhS2Pkyu8w1m7EAFyw== vmssadoinfra-admin"

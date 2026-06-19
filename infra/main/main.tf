@@ -23,6 +23,7 @@ module "compute" {
   admin_ssh_public_key = var.admin_ssh_public_key
   tags                 = local.common_tags
   lb_backend_pool_id   = module.load_balancer.backend_pool_id
+  health_probe_id      = module.load_balancer.lb_probe_id
 }
 
 module "load_balancer" {

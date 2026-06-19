@@ -13,3 +13,7 @@ output "backend_pool_id" {
 output "frontend_ip_configuration_name" {
   value = "frontend-${var.prefix}"
 }
+
+output "lb_probe_id" {
+  value = azurerm_lb_probe.http.id
+}

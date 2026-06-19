@@ -55,14 +55,125 @@ stages:
             inputs:
               terraformVersion: $(terraformVersion)
 
-          - script: terraform fmt -check -recursive
-            displayName: 'terraform fmt -check'
+          - bash: |
+              terraform fmt -check -recursive
+            displayName: 'Terraform Format Check'
             workingDirectory: $(workingDirectory)
 
-          - script: terraform init -backend=false
-            displayName: 'terraform init (no backend)'
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init'
+            inputs:
+              command: 'init'
+              workingDirectory: $(workingDirectory)
+              backendServiceArm: 'azure-service-connection'
+              backendAzureRmResourceGroupName: $(backendResourceGroup)
+              backendAzureRmStorageAccountName: $(backendStorageAccount)
+              backendAzureRmContainerName: $(backendContainer)
+              backendAzureRmKey: $(backendKey)
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Validate'
+            inputs:
+              command: 'validate'
+              workingDirectory: $(workingDirectory) 
+
+          - bash: |
+              curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+            displayName: 'Install TFLint'
+
+          - bash: |
+              tflint --init --config=../.tflint.hcl
+              tflint --config=../.tflint.hcl
+            displayName: 'Run TFLint'
             workingDirectory: $(workingDirectory)
 
-          - script: terraform validate
-            displayName: 'terraform validate'
-            workingDirectory: $(workingDirectory)
+  - stage: Plan
+    displayName: 'Plan Terraform'
+    dependsOn: Validate
+    condition: succeeded()
+    jobs:
+      - job: Plan
+        displayName: 'Terraform Plan'
+        steps:
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: $(terraformVersion)
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init'
+            inputs:
+              command: 'init'
+              workingDirectory: $(workingDirectory)
+              backendServiceArm: 'azure-service-connection'
+              backendAzureRmResourceGroupName: $(backendResourceGroup)
+              backendAzureRmStorageAccountName: $(backendStorageAccount)
+              backendAzureRmContainerName: $(backendContainer)
+              backendAzureRmKey: $(backendKey)
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Plan'
+            inputs:
+              command: 'plan'
+              workingDirectory: $(workingDirectory)
+              environmentServiceNameAzureRM: 'azure-service-connection'
+              commandOptions: '-out=$(Pipeline.Workspace)/tfplan -var-file="$(tfVarsFile)"'
+            env:
+              TF_VAR_local_ip_address: $(localIpAddress)              
+              TF_VAR_pipeline_sp_object_id: $(pipelineSpObjectId)
+              TF_VAR_current_user_object_id: $(currentUserObjectId)
+
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publish Plan'
+            inputs:
+              targetPath: '$(Pipeline.Workspace)/tfplan'
+              artifactName: 'tfplan'            
+
+  - stage: Apply
+    displayName: 'Apply Terraform'
+    dependsOn: Plan
+    condition: succeeded()
+    jobs:
+      - deployment: Apply
+        displayName: 'Terraform Apply'
+        environment: 'infrastructure-${{ parameters.environment }}'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  displayName: 'Checkout Repository'
+
+                - task: TerraformInstaller@1
+                  displayName: 'Install Terraform'
+                  inputs:
+                    terraformVersion: $(terraformVersion)
+
+                - task: TerraformTaskV4@4
+                  displayName: 'Terraform Init'
+                  inputs:
+                    command: 'init'
+                    workingDirectory: $(workingDirectory)
+                    backendServiceArm: 'azure-service-connection'
+                    backendAzureRmResourceGroupName: $(backendResourceGroup)
+                    backendAzureRmStorageAccountName: $(backendStorageAccount)
+                    backendAzureRmContainerName: $(backendContainer)
+                    backendAzureRmKey: $(backendKey)
+
+                - task: DownloadPipelineArtifact@2
+                  displayName: 'Download Plan'
+                  inputs:
+                    artifactName: 'tfplan'
+                    targetPath: '$(Pipeline.Workspace)/tfplan'
+
+                - task: TerraformTaskV4@4
+                  displayName: 'Terraform Apply'
+                  inputs:
+                    command: 'apply'
+                    workingDirectory: $(workingDirectory)
+                    environmentServiceNameAzureRM: 'azure-service-connection'
+                    commandOptions: '$(Pipeline.Workspace)/tfplan/tfplan'          
+                  env:
+                    TF_VAR_local_ip_address: $(localIpAddress)
+                    TF_VAR_pipeline_sp_object_id: $(pipelineSpObjectId)
+                    TF_VAR_current_user_object_id: $(currentUserObjectId)

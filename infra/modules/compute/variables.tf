@@ -63,3 +63,8 @@ variable "lb_backend_pool_id" {
   description = "Load Balancer backend pool ID to associate the VMSS NICs with"
   type        = string
 }
+
+variable "health_probe_id" {
+  description = "Load Balancer health probe ID used to determine instance health during automatic upgrades"
+  type        = string
+}

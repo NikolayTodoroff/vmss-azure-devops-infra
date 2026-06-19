@@ -5,11 +5,11 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   sku                 = var.instance_sku
   instances           = var.instance_count
   admin_username      = var.admin_username
-  upgrade_mode        = "Automatic"
-  tags = var.tags
+  tags                = var.tags
 
-  custom_data         = filebase64("${path.module}/cloud-init/nginx.yaml")
+  custom_data                     = filebase64("${path.module}/cloud-init/nginx.yaml")
   disable_password_authentication = true
+  upgrade_mode                    = "Automatic"
 
   admin_ssh_key {
     username   = var.admin_username
@@ -17,15 +17,15 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   }
 
   source_image_reference {
-  publisher = "Canonical"
-  offer     = "0001-com-ubuntu-server-jammy"
-  sku       = "22_04-lts"
-  version   = "latest"
-}
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+    version   = "latest"
+  }
 
   os_disk {
     storage_account_type = "Standard_LRS"
-    caching               = "ReadWrite"
+    caching              = "ReadWrite"
   }
 
   network_interface {

@@ -38,12 +38,12 @@ resource "azurerm_lb_probe" "http" {
 
 resource "azurerm_lb_rule" "http" {
   loadbalancer_id                = azurerm_lb.this.id
-  name                            = "rule-http-${var.prefix}"
-  protocol                        = "Tcp"
-  frontend_port                   = 80
-  backend_port                    = 80
-  frontend_ip_configuration_name  = azurerm_lb.this.frontend_ip_configuration[0].name
-  backend_address_pool_ids        = [azurerm_lb_backend_address_pool.vmss.id]
-  probe_id                        = azurerm_lb_probe.http.id
-  disable_outbound_snat           = true
+  name                           = "rule-http-${var.prefix}"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = azurerm_lb.this.frontend_ip_configuration[0].name
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.vmss.id]
+  probe_id                       = azurerm_lb_probe.http.id
+  disable_outbound_snat          = true
 }
