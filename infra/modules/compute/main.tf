@@ -10,7 +10,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   custom_data                     = filebase64("${path.module}/cloud-init/nginx.yaml")
   disable_password_authentication = true
   upgrade_mode                    = "Automatic"
-  health_probe_id                  = var.health_probe_id
+  health_probe_id                 = var.health_probe_id
 
   admin_ssh_key {
     username   = var.admin_username

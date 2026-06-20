@@ -40,14 +40,19 @@ variable "pipeline_sp_object_id" {
   type        = string
 }
 
-# variable "log_analytics_sku" {
-#   description = "Log Analytics Workspace SKU"
-#   type        = string
-#   default     = "PerGB2018"
-# }
+variable "log_analytics_sku" {
+  description = "Log Analytics Workspace SKU"
+  type        = string
+  default     = "PerGB2018"
+}
 
-# variable "log_analytics_retention_days" {
-#   description = "Log retention in days"
-#   type        = number
-#   default     = 30
-# }
+variable "log_analytics_retention_days" {
+  description = "Log retention in days"
+  type        = number
+  default     = 30
+}
+
+variable "alert_email" {
+  description = "Email address for alert notifications"
+  type        = string
+}

@@ -30,18 +30,3 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-
-variable "vmss_id" {
-  description = "Resource ID of the VMSS to monitor"
-  type        = string
-}
-
-variable "lb_id" {
-  description = "Resource ID of the Load Balancer to monitor"
-  type        = string
-}
-
-variable "alert_email" {
-  description = "Email address for alert notifications"
-  type        = string
-}

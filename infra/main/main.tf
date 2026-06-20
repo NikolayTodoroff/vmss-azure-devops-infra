@@ -47,3 +47,17 @@ module "key_vault" {
   local_ip_address    = var.local_ip_address
   tags                = local.common_tags
 }
+
+module "monitoring" {
+  source = "../modules/monitoring"
+
+  prefix                       = local.prefix
+  location                     = var.location
+  resource_group_name          = azurerm_resource_group.rg_main.name
+  vmss_id                      = module.compute.vmss_id
+  lb_id                        = module.load_balancer.lb_id
+  alert_email                  = var.alert_email
+  tags                         = local.common_tags
+  log_analytics_sku            = var.log_analytics_sku
+  log_analytics_retention_days = var.log_analytics_retention_days
+}
