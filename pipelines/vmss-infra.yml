@@ -136,6 +136,11 @@ stages:
     jobs:
       - deployment: Apply
         displayName: 'Terraform Apply'
+        ${{ if eq(parameters.environment, 'prod') }}:
+          pool: 'self-hosted-pool'
+        ${{ else }}:
+          pool:
+            vmImage: 'ubuntu-latest'
         environment: 'infrastructure-${{ parameters.environment }}'
         strategy:
           runOnce:
@@ -147,7 +152,7 @@ stages:
                 - task: TerraformInstaller@1
                   displayName: 'Install Terraform'
                   inputs:
-                    terraformVersion: $(terraformVersion)
+                    terraformVersion: $(terraformVersion)  
 
                 - task: TerraformTaskV4@4
                   displayName: 'Terraform Init'
