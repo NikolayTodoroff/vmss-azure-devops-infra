@@ -3,6 +3,8 @@ resource "azurerm_resource_group" "rg_main" {
   location = var.location
 }
 
+data "azurerm_client_config" "current" {}
+
 module "networking" {
   source = "../modules/networking"
 
@@ -32,5 +34,16 @@ module "load_balancer" {
   prefix              = local.prefix
   location            = var.location
   resource_group_name = azurerm_resource_group.rg_main.name
+  tags                = local.common_tags
+}
+
+module "key_vault" {
+  source = "../modules/key-vault"
+
+  prefix              = local.prefix
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg_main.name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+  local_ip_address    = var.local_ip_address
   tags                = local.common_tags
 }

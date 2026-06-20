@@ -30,10 +30,15 @@ variable "admin_ssh_public_key" {
   type        = string
 }
 
-# variable "workflow_sp_object_id" {
-#   description = "Azure Devops pipelines SP object ID"
-#   type        = string
-# }
+variable "local_ip_address" {
+  description = "Local IP allowed through the Key Vault network ACL for local terraform runs"
+  type        = string
+}
+
+variable "pipeline_sp_object_id" {
+  description = "Object ID of the pipeline's service principal"
+  type        = string
+}
 
 # variable "log_analytics_sku" {
 #   description = "Log Analytics Workspace SKU"

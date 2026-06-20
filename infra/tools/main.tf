@@ -26,17 +26,17 @@ resource "azurerm_network_security_group" "agent" {
 }
 
 resource "azurerm_network_security_rule" "allow_ssh_from_me" {
-  name                         = "AllowSshFromMyIp"
-  priority                     = 100
-  direction                    = "Inbound"
-  access                       = "Allow"
-  protocol                     = "Tcp"
-  source_port_range            = "*"
-  destination_port_range       = "22"
-  source_address_prefix        = "${var.local_ip_address}/32"
-  destination_address_prefix   = "*"
-  resource_group_name          = azurerm_resource_group.rg_tools.name
-  network_security_group_name  = azurerm_network_security_group.agent.name
+  name                        = "AllowSshFromMyIp"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "${var.local_ip_address}/32"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.rg_tools.name
+  network_security_group_name = azurerm_network_security_group.agent.name
 }
 
 resource "azurerm_subnet_network_security_group_association" "tools" {
@@ -93,7 +93,7 @@ resource "azurerm_linux_virtual_machine" "agent" {
 
   os_disk {
     storage_account_type = "Standard_LRS"
-    caching               = "ReadWrite"
+    caching              = "ReadWrite"
   }
 
   tags = local.common_tags
